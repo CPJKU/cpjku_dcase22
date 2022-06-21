@@ -1,8 +1,8 @@
 # malach_dcase22
 
-This Repository is dedicated to DCASE2022 Task 1 Audio Scene Classification codes for the models delieved to the challenege.
+This Repository is dedicated to the CPJKU submission of DCASE 2022, Task 1, Low-Complexity Acoustic Scene Classification.
 
-Skeleton of the code is from [Khaled Koutini](https://github.com/kkoutini/cpjku_dcase20) repository for the challenge
+The skeleton of the code is similar to [Khaled Koutini](https://github.com/kkoutini/cpjku_dcase20).
 
 Authors of the code:
 - Florian Schmid 
@@ -23,13 +23,12 @@ This repo uses forked versions of sacred for configuration and logging, and pyto
 This repo also uses [ba3l](https://github.com/kkoutini/ba3l) repository as an integrating tool 
 between mongodb, sacred and pytorch lightning
 
-to setup the environment [Mamba](https://github.com/mamba-org/mamba) can be used which works faster than conda:
+To setup the environment [Mamba](https://github.com/mamba-org/mamba) can be used which works faster than conda:
 
 
 ```
 conda install mamba -n base -c conda-forge
 ```
-CAUTION: This might take several minutes.
 
 Now you can import the environment from environment.yml
 
@@ -37,7 +36,9 @@ Now you can import the environment from environment.yml
 mamba env create -f environment.yml
 ```
 
-After should be used to activate the environment.
+CAUTION: This might take several minutes.
+
+Activate the environment:
 
 ```
 conda activate dcase22_t1
@@ -53,38 +54,38 @@ pip install -r requirements.txt
 ```
 # Running Code:
 
-After downloading the dataset and setting up the path to the dataset in **datasets/dcase22/dcase22t1.py** and **dcase22t1_as.py** terminal can be used to run the commands:
+After downloading the dataset and setting up the path to the dataset in **datasets/dcase22/dcase22t1.py** and **dcase22t1_as.py**, the terminal can be used to run the commands:
 
 **models.net** is used to set up different configs of the model:
 
 **basedataset.audio_processor** is used to setup different configs for the dataset processor
 
-custom configs can be written in **experiments/dcase22/t1/config_updates.py** in the format of dictionaries
-thse configs can be called by their names
+Custom configs can be written in **experiments/dcase22/t1/config_updates.py** in the format of dictionaries.
+These configs can be called by their names.
 
 ## examples:
 
-**models.net.rho** sets the receptive field of the network. default is 4
+**models.net.rho** sets the receptive field of the network. default: 4
 
-**models.net.s2_group** sets the grouping of convolution. default is 1 
+**models.net.s2_group** sets the grouping of convolution. default: 1 
 
-**basedataset.audio_processor.sr**: sets the sampling rate of the raw audio file defaults is 44100
+**basedataset.audio_processor.sr**: sets the sampling rate of the raw audio file, default: 44100
 
 **basedataset.audio_processor.resample_only**: sets the preprocessor to only resample the audio file 
 
-**soft_targets_weight_long**: sets the weights for the soft targets of the teacher during loss calculation 
+**soft_targets_weight_long**: weight for the distillation loss 
 
-**temperature:** sets the softness for the logits of teachers
+**temperature:** configures the softness for the soft targets
 
 **random_sec:** selects random 1 second from 10 seconds of audio
 
-**mixup_alpha:** >0 augment audio file using mixup 
+**mixup_alpha:** >0 augments audio file using mixup 
 
-**mixstyle_alpha:** >0 augment audio using mixstyle 
+**mixstyle_alpha:** >0 augments audio using mixstyle 
 
-**quantization:** ==1 at the end of training performs quantization and returns final accuracy and loss based on quantized model
+**quantization:** =1 at the end of training performs quantization and returns final accuracy and loss based on quantized model
 
-**models.teacher_net.teachers_list**: list of pretrained teacher for assembling , repo contains 2 sample teachers
+**models.teacher_net.teachers_list**: list of pretrained teacher for ensembling, repo contains 2 sample teachers
 
 **cp_mini_resnet:** named config to set width, depth and rho of cp_resnet as well as weight decay of the network
 
