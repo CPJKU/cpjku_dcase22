@@ -1,8 +1,8 @@
-# malach_dcase22
+# CPJKU Submission for DCASE 2022
 
 This Repository is dedicated to the CPJKU submission of DCASE 2022, Task 1, Low-Complexity Acoustic Scene Classification.
 
-The skeleton of the code is similar to [Khaled Koutini](https://github.com/kkoutini/cpjku_dcase20).
+The skeleton of the code is similar to [this repository](https://github.com/kkoutini/cpjku_dcase20).
 
 Authors of the code:
 - Florian Schmid 
@@ -13,15 +13,12 @@ Authors of the code:
 # Preparing Environment:
 
 
-To use this repo conda is required. 
+An installation of [conda](https://docs.conda.io/en/latest/miniconda.html) is required on your system.
 
-Install [conda](https://docs.conda.io/en/latest/miniconda.html) from here.
+This repo uses forked versions of [sacred](https://github.com/kkoutini/sacred) for configuration and logging, [pytorch-lightning](https://github.com/kkoutini/pytorch-lightning) as a convenient pytorch wrapper and [ba3l](https://github.com/kkoutini/ba3l) as an integrating tool 
+between mongodb, sacred and pytorch lightning.
 
-
-This repo uses forked versions of sacred for configuration and logging, and pytorch-lightning for training.
-
-This repo also uses [ba3l](https://github.com/kkoutini/ba3l) repository as an integrating tool 
-between mongodb, sacred and pytorch lightning
+-----------------------
 
 To setup the environment [Mamba](https://github.com/mamba-org/mamba) can be used which works faster than conda:
 
