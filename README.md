@@ -2,7 +2,7 @@
 
 This Repository is dedicated to the CPJKU submission of DCASE 2022, Task 1, Low-Complexity Acoustic Scene Classification.
 
-The skeleton of the code is similar to [this repository](https://github.com/kkoutini/cpjku_dcase20).
+The skeleton of the code is similar to [previous CPJKU submissions](https://github.com/kkoutini/cpjku_dcase20) and the [PaSST](https://github.com/kkoutini/PaSST) repository.
 
 Authors of the code:
 - Florian Schmid 
@@ -10,7 +10,7 @@ Authors of the code:
 - Khaled Koutini 
 
 
-# Preparing Environment:
+# Setting up the Environment:
 
 
 An installation of [conda](https://docs.conda.io/en/latest/miniconda.html) is required on your system.
@@ -20,7 +20,7 @@ between mongodb, sacred and pytorch lightning.
 
 -----------------------
 
-To setup the environment [Mamba](https://github.com/mamba-org/mamba) can be used which works faster than conda:
+To setup the environment [Mamba](https://github.com/mamba-org/mamba) is recommended and faster than conda:
 
 
 ```
@@ -35,20 +35,23 @@ mamba env create -f environment.yml
 
 CAUTION: This might take several minutes.
 
-Activate the environment:
+An environment named `dcase22_t1` has been created. Activate the environment:
 
 ```
 conda activate dcase22_t1
 ```
 
 
-Alternative approach is to create arbitrary environment and use _requirements.txt_ to install the packages
+Now install `sacred`, `ba3l` and `pl-lightening`:
 
+```shell
+# dependencies
+pip install -e 'git+https://github.com/kkoutini/ba3l@v0.0.2#egg=ba3l'
+pip install -e 'git+https://github.com/kkoutini/pytorch-lightning@v0.0.1#egg=pytorch-lightning'
+pip install -e 'git+https://github.com/kkoutini/sacred@v0.0.1#egg=sacred' 
 ```
-conda create -n <name> python=3.9
-conda activate <name>
-pip install -r requirements.txt
-```
+
+
 # Running Code:
 
 After downloading the dataset and setting up the path to the dataset in **datasets/dcase22/dcase22t1.py** and **dcase22t1_as.py**, the terminal can be used to run the commands:
@@ -86,11 +89,19 @@ These configs can be called by their names.
 
 **cp_mini_resnet:** named config to set width, depth and rho of cp_resnet as well as weight decay of the network
 
-an example of a running code:
+# Sample Commands
+
+## Similar to Submission 1 (t10sec) (rho=8,T=1, 10-second teacher, mixup) 
+```
+CUDA_VISIBLE_DEVICES=1 python -m experiments.dcase22.t1.teachers_gang with cp_mini_resnet models.net.rho=8 dcase22_reassembled soft_targets_weight=50 soft_targets_weight_long=3.0 temperature=1 mixup_alpha=0.3 quantization=1 models.teacher_net.teachers_list='[253, 254, 255, 256]' models.net.s2_group=2 models.net.cut_channels_s3=36 
+```
+
+## Similar to Submission 2 (mixstyleR8) (rho=8, T=1, mixstyle_alpha=0.3, mixstyle_p=0.6)
 
 ```
-python -m experiments.dcase22.t1.teachers_gang with cp_mini_resnet models.net.rho=8 basedataset.audio_processor.sr=32000 basedataset.audio_processor.resample_only=True dcase22_reassembled soft_targets_weight=50 soft_targets_weight_long=3.0 temperature=3 random_sec=1 mixup_alpha=0.3 quantization=1 models.teacher_net.teachers_list='[228, 229]' models.net.s2_group=2 models.net.cut_channels_s3=36 teacher_long_run_id=278 
+CUDA_VISIBLE_DEVICES=1 python -m experiments.dcase22.t1.teachers_gang with cp_mini_resnet models.net.rho=8 dcase22_reassembled soft_targets_weight=50 temperature=1 mixstyle_alpha=0.3 mixstyle_p=0.6 quantization=1 models.teacher_net.teachers_list='[253, 254, 255, 256]' models.net.s2_group=2 models.net.cut_channels_s3=36 trainer.max_epochs=1 
 ```
+
 
 
 
