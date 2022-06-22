@@ -986,7 +986,7 @@ def get_teacher_avg_ensemble(teachers_list=[], teachers_path="teacher_models"):
 
     for i, tid in enumerate(teachers_list):
         ckpt = torch.load(f"{teachers_path}/passt_{tid}.pt")
-        print("\n\n Loaded Teacher from ",f"{teachers_path}/passt_{tid}.pt","\n\n")
+        print("\n\n Loaded Teacher from ", f"{teachers_path}/passt_{tid}.pt", "\n\n")
         models_list[i].load_state_dict(ckpt)
     model = EnsembelerModel(models_list)
     print(model)

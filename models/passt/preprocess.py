@@ -49,7 +49,6 @@ class AugmentMelSTFT(nn.Module):
         else:
             self.timem = torchaudio.transforms.TimeMasking(timem, iid_masks=True)
 
-
     def forward(self, x):
         x = nn.functional.conv1d(x.unsqueeze(1), self.preemphasis_coefficient).squeeze(1)
         x = torch.stft(x, self.n_fft, hop_length=self.hopsize, win_length=self.win_length,
@@ -61,7 +60,6 @@ class AugmentMelSTFT(nn.Module):
         if not self.training:
             fmin = self.fmin
             fmax = self.fmax
-
 
         mel_basis, _ = torchaudio.compliance.kaldi.get_mel_banks(self.n_mels,  self.n_fft, self.sr,
                                         fmin, fmax, vtln_low=100.0, vtln_high=-500., vtln_warp_factor=1.0)
@@ -84,4 +82,3 @@ class AugmentMelSTFT(nn.Module):
         return 'winsize={}, hopsize={}'.format(self.win_length,
                                                self.hopsize
                                                )
-

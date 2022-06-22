@@ -17,43 +17,51 @@ os.makedirs(image_folder, exist_ok=True)
 
 
 class MyStaticPostQuantizationCallback(Callback):
-    def __init__(self, get_calibration_loader, calibration_batches=100, split_to_second=False):
+    def __init__(self, get_calibration_loader, calibration_batches=100):
         self.calibration_loader = get_calibration_loader()
         self.calibration_batches = calibration_batches
-        self.split_to_second = split_to_second
 
     def quantize_model(self, pl_module):
         print("*********** Before Quantization: ***********")
-        shape = [1, 256, 44]  # pl_module.mel_forward(sample).size()
-        macc_orig, n_params_orig = nessi.get_model_size(pl_module.net, input_size=(1, shape[0], shape[1], shape[2]))
-        print("macc_orig: ", macc_orig)
-        print("n_params_orig: ", n_params_orig)
-        # exit()
-        print_size_of_model(pl_module.net)
-        pl_module.net.cpu()
         if hasattr(pl_module, 'mel'):
             pl_module.mel.cpu()
+
+        # get the shape of spectrograms
+        sample = next(iter(self.calibration_loader))[0][0].unsqueeze(0)
+        sample = sample[:, :, :sample.size(2) // 10]
+        shape = pl_module.mel_forward(sample).size()
+
+        # get original macs and params
+        macc_orig, n_params_orig = nessi.get_model_size(pl_module.net, input_size=(1, shape[1], shape[2], shape[3]))
+        print("macc_orig: ", macc_orig)
+        print("n_params_orig: ", n_params_orig)
+
+        # print size of model before quantization
+        print_size_of_model(pl_module.net)
         pl_module.net.fuse_model()
 
+        # get macs and params after fusing model
         macc, n_params = nessi.get_model_size(
-            pl_module.net, input_size=(1, shape[0], shape[1], shape[2]))
+            pl_module.net, input_size=(1, shape[1], shape[2], shape[3]))
         print("macc after fuse : ", macc)
         print("n_params after fuse: ", n_params)
 
         pl_module.net.qconfig = torch.quantization.get_default_qconfig('fbgemm')
         torch.quantization.prepare(pl_module.net, inplace=True)
-        pl_module.cpu()
+
+        pl_module.net.cpu()
+        if hasattr(pl_module, 'mel'):
+            pl_module.mel.cpu()
         for i, batch in enumerate(tqdm(self.calibration_loader, total=self.calibration_batches)):
             x, files, y, device_indices, cities, indices = batch
-            if self.split_to_second:
-                x = rearrange(x, 'b c (slices t) -> (b slices) c t', slices=10)
-                # take only one tenth of samples, since we want to have the same number of calibration samples
-                # for the 1 and 10 second cases
-                x = x[0:x.size(0):10]
+            # split to 1-second pieces
+            x = rearrange(x, 'b c (slices t) -> (b slices) c t', slices=10)
+            x = x.cpu()
             if hasattr(pl_module, 'mel'):
                 x = pl_module.mel_forward(x)
+
             with torch.no_grad():
-                pl_module.net(x.cpu())
+                pl_module.net(x)
             # stop after a certain number of calibration samples
             if i == self.calibration_batches:
                 break
@@ -66,8 +74,6 @@ class MyStaticPostQuantizationCallback(Callback):
     def on_test_start(self, trainer, pl_module):
         self.quantize_model(pl_module)
 
-    #def on_predict_start(self, trainer, pl_module):
-    #    self.quantize_model(pl_module)
 
 
 def mixstyle(x, p=0.5, alpha=0.1, eps=1e-6):
@@ -96,16 +102,6 @@ def print_size_of_model(model):
     print('Size (MB):', model_size_bytes/1e6)
     os.remove('temp.p')
     return model_size_bytes
-
-
-def plot_spec(spec, title):
-    if type(spec) == torch.Tensor:
-        spec = spec.numpy()
-    plt.figure()
-    librosa.display.specshow(spec.squeeze())
-    plt.colorbar()
-    plt.title(title, fontsize=20)
-    plt.savefig(os.path.join(image_folder, title + ".png"), dpi=100)
 
 
 def mixup(size, alpha):

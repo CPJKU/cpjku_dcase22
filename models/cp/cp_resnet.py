@@ -295,13 +295,13 @@ model_ing.add_config(instance_cmd="get_model")
 @model_ing.command
 def get_model(rho=4, in_channels=1, arch="cp_resnet", n_classes=10,
               base_channels=32, cut_channels_s2=0, cut_channels_s3=0, channels_multiplier=2, n_blocks=(2, 2, 2),
-              s1_group=1, s2_group=1, s3_group=1,):
+              s1_group=1, s2_group=1, s3_group=1):
     """
 
-    @param rho: controls the receptive field of the network , 4 is default , rho>4 increase rf and rho<4 decrease it
+    @param rho: controls the receptive field of the network ,4 is default , rho>4 increase rf and rho<4 decrease it
     @param in_channels: input channels to the network for the audio its by default 1
-    @param arch: name of the architecure for saving
-    @param n_classes: number of the classes to create the network (for asc this number is 10)
+    @param arch: name of the architecture for saving
+    @param n_classes: number of the classes to create the network
     @param base_channels: starting channels of the network
     @param cut_channels_s2: controls how many channels should be cut from stage 2 channels
     @param cut_channels_s3: controls how many channels should be cut from stage 3 channels
@@ -331,22 +331,22 @@ def get_model(rho=4, in_channels=1, arch="cp_resnet", n_classes=10,
         "n_classes": n_classes,
         "stage1": {"maxpool": [0, 1, 2, 4],
                    "k1s": [3,
-                           3 - (-extra_kernal_rf > 2) * 2,],
+                           3 - (-extra_kernal_rf > 2) * 2],
                    "k2s": [1,
-                           3 - (-extra_kernal_rf > 1) * 2,],
+                           3 - (-extra_kernal_rf > 1) * 2],
                    "groups": s1_group},
 
         "stage2": {"maxpool": [], "k1s": [3 - (-extra_kernal_rf > 0) * 2,
-                                          1 + (extra_kernal_rf > 1) * 2,],
+                                          1 + (extra_kernal_rf > 1) * 2],
                    "k2s": [1 + (extra_kernal_rf > 0) * 2,
-                           1 + (extra_kernal_rf > 2) * 2,],
+                           1 + (extra_kernal_rf > 2) * 2],
                    "groups": s2_group},
 
         "stage3": {"maxpool": [],
                    "k1s": [1 + (extra_kernal_rf > 3) * 2,
-                           1 + (extra_kernal_rf > 5) * 2,],
+                           1 + (extra_kernal_rf > 5) * 2],
                    "k2s": [1 + (extra_kernal_rf > 4) * 2,
-                           1 + (extra_kernal_rf > 6) * 2,],
+                           1 + (extra_kernal_rf > 6) * 2],
                    "groups": s3_group},
         "block_type": "basic"
     }
