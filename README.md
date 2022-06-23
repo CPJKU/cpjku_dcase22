@@ -57,7 +57,11 @@ pip install -e 'git+https://github.com/kkoutini/sacred@v0.0.1#egg=sacred'
 
 # Setting up the external data resources:
 
-Firstly, you need to create a reassembled version of the [TAU Urban Acoustic Scenes 2022 Mobile development dataset](TAU Urban Acoustic Scenes 2022 Mobile). A draft of how to reassemble the downloaded files is provided in [files_reassemble.ipynb](files_reassemble.ipynb).
+Firstly, you need to create a reassembled version of the [TAU Urban Acoustic Scenes 2022 Mobile development dataset](TAU Urban Acoustic Scenes 2022 Mobile). A short draft of how to reassemble the downloaded files is provided in [files_reassemble.ipynb](files_reassemble.ipynb).
+
+Secondly, you need to change all paths specfied in the [dataset file](datasets/dcase22/dcase22t1.py) to the correct locations on your system.
+
+Thirdly, you need to download pre-trained PaSST models and 10-second teacher predictions from the github release provided in this repository and put them in the folder [teacher_models](teacher_models). Click [here](teacher_models/README.md) to get more information on the provided files.
 
 # Running Code:
 
