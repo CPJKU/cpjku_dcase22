@@ -120,7 +120,7 @@ python -m experiments.dcase22.t1.teachers_gang with cp_mini_resnet models.net.rh
 
 ## Using MongoDB for Logging
 
-Install pymongo:
+Install [pymongo](https://pypi.org/project/pymongo/):
 
 ```
 pip install pymongo
