@@ -5,9 +5,9 @@ This Repository is dedicated to the CPJKU submission of DCASE 2022, Task 1, Low-
 The skeleton of the code is similar to [previous CPJKU submissions](https://github.com/kkoutini/cpjku_dcase20) and the [PaSST](https://github.com/kkoutini/PaSST) repository.
 
 Authors of the code:
-- Florian Schmid 
-- Shahed Masoudian
-- Khaled Koutini 
+- [Florian Schmid](https://github.com/fschmid56/)
+- [Shahed Masoudian](https://github.com/ShawMask)
+- [Khaled Koutini](https://github.com/kkoutini) 
 
 
 # Setting up the Environment:
@@ -55,55 +55,67 @@ pip install -e 'git+https://github.com/kkoutini/pytorch-lightning@v0.0.1#egg=pyt
 pip install -e 'git+https://github.com/kkoutini/sacred@v0.0.1#egg=sacred' 
 ```
 
+# Setting up the external data resources:
 
-# Running Code:
+Firstly, you need to create a reassembled version of the [TAU Urban Acoustic Scenes 2022 Mobile development dataset](TAU Urban Acoustic Scenes 2022 Mobile). A short draft of how to reassemble the downloaded files is provided in [files_reassemble.ipynb](files_reassemble.ipynb).
 
-After downloading the dataset and setting up the path to the dataset in **datasets/dcase22/dcase22t1.py** and **dcase22t1_as.py**, the terminal can be used to run the commands:
+Secondly, you need to change all paths specfied in the [dataset file](datasets/dcase22/dcase22t1.py) to the correct locations on your system.
 
-**models.net** is used to set up different configs of the model:
+Thirdly, you need to download pre-trained PaSST models and 10-second teacher predictions from the github release provided in this repository and put them in the folder [teacher_models](teacher_models).
 
-**basedataset.audio_processor** is used to setup different configs for the dataset processor
+# Running Experiments:
 
-Custom configs can be written in **experiments/dcase22/t1/config_updates.py** in the format of dictionaries.
-These configs can be called by their names.
+After creating the environment and setting up external data resources the following is the simplest command to run:
 
-## examples:
-
-**models.net.rho** sets the receptive field of the network. default: 4
-
-**models.net.s2_group** sets the grouping of convolution. default: 1 
-
-**basedataset.audio_processor.sr**: sets the sampling rate of the raw audio file, default: 44100
-
-**basedataset.audio_processor.resample_only**: sets the preprocessor to only resample the audio file 
-
-**soft_targets_weight_long**: weight for the distillation loss 
-
-**temperature:** configures the softness for the soft targets
-
-**random_sec:** selects random 1 second from 10 seconds of audio
-
-**mixup_alpha:** >0 augments audio file using mixup 
-
-**mixstyle_alpha:** >0 augments audio using mixstyle 
-
-**quantization:** =1 at the end of training performs quantization and returns final accuracy and loss based on quantized model
-
-**models.teacher_net.teachers_list**: list of pretrained teacher for ensembling, repo contains 2 sample teachers
-
-**cp_mini_resnet:** named config to set width, depth and rho of cp_resnet as well as weight decay of the network
-
-# Sample Commands
-
-## Similar to Submission 1 (t10sec) (rho=8,T=1, 10-second teacher, mixup) 
 ```
-CUDA_VISIBLE_DEVICES=1 python -m experiments.dcase22.t1.teachers_gang with cp_mini_resnet models.net.rho=8 dcase22_reassembled soft_targets_weight=50 soft_targets_weight_long=3.0 temperature=1 mixup_alpha=0.3 quantization=1 models.teacher_net.teachers_list='[253, 254, 255, 256]' models.net.s2_group=2 models.net.cut_channels_s3=36 basedataset.subsample=10000 trainer.max_epochs=20
+python -m experiments.dcase22.t1.teachers_gang
+```
+And a short test run:
+
+```
+python -m experiments.dcase22.t1.teachers_gang with trainer.max_epochs=10 basedataset.subsample=100
+```
+
+-----------------------
+
+A lot configuration possibilities can be set via the command line, here are examples of the configurations we used in our submissions:
+
+**Network configuration**:
+
+- **cp_mini_resnet:** named config to decrease the number of blocks in the network
+- **models.net.rho:** changes receptive field of the network
+- **models.net.s2_group:** grouping in second network stage
+- **models.net.cut_channels_s3:** cutting the width on stage 3 of the network
+
+**Knowledge Distillation**:
+
+- **temperature:** temperature used to create soft targets
+- **soft_targets_weight:** weighting of the distillation loss
+- **models.teacher_net.teachers_list:** specifies list of teacher ids to be ensembled
+- **soft_targets_weight_long:** weighting of the distillation loss reagrding a 10-second teacher
+
+**Mixup and Mixstyle**:
+
+- **mixup_alpha**: mixing coefficient for mixup
+- **mistyle_alpha**: mixing coefficient for mixstyle
+- **mixstyle_p**: probability of mixstyle being applied to a batch
+
+**Quantization**:
+
+- **quantization**: setting quantization=1 evaluates the quantized model on the test split of the development set after training
+
+
+# Submission Commands
+
+## Similar to Submission 1 (t10sec) (rho=8, T=1, 10-second teacher, mixup) 
+```
+python -m experiments.dcase22.t1.teachers_gang with cp_mini_resnet models.net.rho=8 soft_targets_weight=50 soft_targets_weight_long=3.0 temperature=1 mixup_alpha=0.3 quantization=1 models.teacher_net.teachers_list='[253, 254, 255, 256]' models.net.s2_group=2 models.net.cut_channels_s3=36 
 ```
 
 ## Similar to Submission 2 (mixstyleR8) (rho=8, T=1, mixstyle_alpha=0.3, mixstyle_p=0.6)
 
 ```
-CUDA_VISIBLE_DEVICES=1 python -m experiments.dcase22.t1.teachers_gang with cp_mini_resnet models.net.rho=8 dcase22_reassembled soft_targets_weight=50 temperature=1 mixstyle_alpha=0.3 mixstyle_p=0.6 quantization=1 models.teacher_net.teachers_list='[253, 254, 255, 256]' models.net.s2_group=2 models.net.cut_channels_s3=36 trainer.max_epochs=1 
+python -m experiments.dcase22.t1.teachers_gang with cp_mini_resnet models.net.rho=8 soft_targets_weight=50 temperature=1 mixstyle_alpha=0.3 mixstyle_p=0.6 quantization=1 models.teacher_net.teachers_list='[253, 254, 255, 256]' models.net.s2_group=2 models.net.cut_channels_s3=36 
 ```
 
 
