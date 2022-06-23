@@ -118,7 +118,13 @@ python -m experiments.dcase22.t1.teachers_gang with cp_mini_resnet models.net.rh
 python -m experiments.dcase22.t1.teachers_gang with cp_mini_resnet models.net.rho=8 soft_targets_weight=50 temperature=1 mixstyle_alpha=0.3 mixstyle_p=0.6 quantization=1 models.teacher_net.teachers_list='[253, 254, 255, 256]' models.net.s2_group=2 models.net.cut_channels_s3=36 
 ```
 
-## Logging using MongoDB
+## Using MongoDB for Logging
+
+Install pymongo:
+
+```
+pip install pymongo
+```
 
 If you have a running MongoDB-Server you can append the following to your command to log experiment details:
 
