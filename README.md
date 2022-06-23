@@ -5,9 +5,9 @@ This Repository is dedicated to the CPJKU submission of DCASE 2022, Task 1, Low-
 The skeleton of the code is similar to [previous CPJKU submissions](https://github.com/kkoutini/cpjku_dcase20) and the [PaSST](https://github.com/kkoutini/PaSST) repository.
 
 Authors of the code:
-- Florian Schmid 
-- Shahed Masoudian
-- Khaled Koutini 
+- [Florian Schmid](https://github.com/fschmid56/)
+- [Shahed Masoudian](https://github.com/ShawMask)
+- [Khaled Koutini](https://github.com/kkoutini) 
 
 
 # Setting up the Environment:
@@ -55,6 +55,9 @@ pip install -e 'git+https://github.com/kkoutini/pytorch-lightning@v0.0.1#egg=pyt
 pip install -e 'git+https://github.com/kkoutini/sacred@v0.0.1#egg=sacred' 
 ```
 
+# Setting up the external data resources:
+
+Firstly, you need to create a reassembled version of the [TAU Urban Acoustic Scenes 2022 Mobile development dataset](TAU Urban Acoustic Scenes 2022 Mobile). A draft of how to reassemble the downloaded files is provided in [files_reassemble.ipynb](files_reassemble.ipynb).
 
 # Running Code:
 
@@ -97,13 +100,13 @@ These configs can be called by their names.
 
 ## Similar to Submission 1 (t10sec) (rho=8,T=1, 10-second teacher, mixup) 
 ```
-CUDA_VISIBLE_DEVICES=1 python -m experiments.dcase22.t1.teachers_gang with cp_mini_resnet models.net.rho=8 dcase22_reassembled soft_targets_weight=50 soft_targets_weight_long=3.0 temperature=1 mixup_alpha=0.3 quantization=1 models.teacher_net.teachers_list='[253, 254, 255, 256]' models.net.s2_group=2 models.net.cut_channels_s3=36 basedataset.subsample=10000 trainer.max_epochs=20
+CUDA_VISIBLE_DEVICES=1 python -m experiments.dcase22.t1.teachers_gang with cp_mini_resnet models.net.rho=8 soft_targets_weight=50 soft_targets_weight_long=3.0 temperature=1 mixup_alpha=0.3 quantization=1 models.teacher_net.teachers_list='[253, 254, 255, 256]' models.net.s2_group=2 models.net.cut_channels_s3=36 basedataset.subsample=40 trainer.max_epochs=20
 ```
 
 ## Similar to Submission 2 (mixstyleR8) (rho=8, T=1, mixstyle_alpha=0.3, mixstyle_p=0.6)
 
 ```
-CUDA_VISIBLE_DEVICES=1 python -m experiments.dcase22.t1.teachers_gang with cp_mini_resnet models.net.rho=8 dcase22_reassembled soft_targets_weight=50 temperature=1 mixstyle_alpha=0.3 mixstyle_p=0.6 quantization=1 models.teacher_net.teachers_list='[253, 254, 255, 256]' models.net.s2_group=2 models.net.cut_channels_s3=36 trainer.max_epochs=1 
+CUDA_VISIBLE_DEVICES=1 python -m experiments.dcase22.t1.teachers_gang with cp_mini_resnet models.net.rho=8 soft_targets_weight=50 temperature=1 mixstyle_alpha=0.3 mixstyle_p=0.6 quantization=1 models.teacher_net.teachers_list='[253, 254, 255, 256]' models.net.s2_group=2 models.net.cut_channels_s3=36 trainer.max_epochs=1 
 ```
 
 
