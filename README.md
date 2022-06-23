@@ -61,7 +61,7 @@ Firstly, you need to create a reassembled version of the [TAU Urban Acoustic Sce
 
 Secondly, you need to change all paths specfied in the [dataset file](datasets/dcase22/dcase22t1.py) to the correct locations on your system.
 
-Thirdly, you need to download pre-trained PaSST models and 10-second teacher predictions from the github release provided in this repository and put them in the folder [teacher_models](teacher_models).
+Thirdly, you need to download pre-trained PaSST models and 10-second teacher predictions from the [github release](https://github.com/CPJKU/cpjku_dcase22/releases/tag/v0.0.1) provided in this repository and put them in the folder [teacher_models](teacher_models).
 
 # Running Experiments:
 
