@@ -980,7 +980,6 @@ class EnsembelerModel(nn.Module):
 
 @model_ing.command
 def get_teacher_avg_ensemble(teachers_list=[], teachers_path="teacher_models"):
-    # teachers_list = [228, 229, 230, 231]
     models_list = [get_model(arch="passt_s_swa_p16_128_ap476", fstride=10,
                              tstride=10, n_classes=10) for _ in teachers_list]
 

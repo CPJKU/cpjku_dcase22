@@ -16,11 +16,11 @@ dataset = Dataset('audiodataset')
 
 @dataset.config
 def default_config():
-    name = 'd22t1'  # dataset name
+    name = 'd22t1_r'  # dataset name
     # processed audio content files cached in this location
     cache_root_path = "/share/rk6/shared/kofta_cached_datasets/"
-    # base directory of the dataset as downloaded
-    base_dir = "/share/rk6/shared/dcase22/"
+    # base directory of the dataset as downloaded and reassembled
+    base_dir = "/share/rk6/shared/dcase22_reassembled/"
     audio_path = os.path.join(base_dir, "TAU-urban-acoustic-scenes-2022-mobile-development")
     meta_csv = os.path.join(audio_path, "meta.csv")
     audio_processor = DynamicIngredient(path="datasets.helpers.audioprocessors.base.default_processor")

@@ -60,7 +60,7 @@ def default_conf():
                                          fmax_aug_range=1),
         # the teacher ensemble (weights to be loaded)
         "teacher_net": DynamicIngredient("models.passt.passt.model_ing", instance_cmd="get_teacher_avg_ensemble",
-                                         teachers_list=[]),
+                                         teachers_list=[253, 254, 255, 256]),
         # dynamically creating spectrograms for teacher (different stft config than student, needs to match pre-training
         # on Audioset)
         "teacher_mel": DynamicIngredient("models.passt.preprocess.model_ing",
