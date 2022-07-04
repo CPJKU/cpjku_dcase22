@@ -1,13 +1,8 @@
 # CPJKU Submission for DCASE 2022
 
-This Repository is dedicated to the CPJKU submission of DCASE 2022, Task 1, Low-Complexity Acoustic Scene Classification. It provides a lightweight version of the code we used to create our challenge submissions. The corresponding technical report will be linked as soon as it is published.
+This Repository is dedicated to the CPJKU submission of DCASE 2022, Task 1, Low-Complexity Acoustic Scene Classification. It provides a lightweight version of the code we used to create our challenge submissions. The corresponding technical report can be found at [DCASE2022](https://dcase.community/documents/challenge2022/technical_reports/DCASE2021_Schmid_77_t1.pdf).
 
 The skeleton of the code is similar to [previous CPJKU submissions](https://github.com/kkoutini/cpjku_dcase20) and the [PaSST](https://github.com/kkoutini/PaSST) repository.
-
-Authors of the code:
-- [Florian Schmid](https://github.com/fschmid56/)
-- [Shahed Masoudian](https://github.com/ShawMask)
-- [Khaled Koutini](https://github.com/kkoutini) 
 
 
 # Setting up the Environment:
